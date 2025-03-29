@@ -3,8 +3,8 @@
 	"description": "Battle against your friends using both might and magic in an epic gladiator-style arena!",
 	"scripts": {
 		"dev": "nodemon ./src/game.ts",
-		"prestart": "cd ./front && pnpm i && pnpm run build",
-		"start": "NODE_ENV=production ts-node ./src/game.ts"
+		"prestart": "(cd ./front && pnpm i && pnpm run build);",
+		"start": "pnpm i && NODE_ENV=production ts-node ./src/game.ts"
 	},
 	"repository": {
 		"type": "git",
