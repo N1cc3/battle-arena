@@ -1,7 +1,7 @@
 import * as THREE from 'three'
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
-import arena from './assets/forest/scene.gltf'
+import forest from './models/forest.gltf'
 
 const scene = new THREE.Scene()
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000)
@@ -19,7 +19,7 @@ const light = new THREE.AmbientLight(0xffffff, 1)
 scene.add(light)
 
 const gltfLoader = new GLTFLoader()
-gltfLoader.load(arena, (gltf) => {
+gltfLoader.load(forest, (gltf) => {
 	const root = gltf.scene
 	scene.add(root)
 })
