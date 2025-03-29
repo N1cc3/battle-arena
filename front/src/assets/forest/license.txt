@@ -1,0 +1,11 @@
+Model Information:
+* title:	swamp location
+* source:	https://sketchfab.com/3d-models/swamp-location-7ede00c0dfe14574bd8f06ee36020609
+* author:	bocharova (https://sketchfab.com/apsnu)
+
+Model License:
+* license type:	CC-BY-NC-4.0 (http://creativecommons.org/licenses/by-nc/4.0/)
+* requirements:	Author must be credited. No commercial use.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "swamp location" (https://sketchfab.com/3d-models/swamp-location-7ede00c0dfe14574bd8f06ee36020609) by bocharova (https://sketchfab.com/apsnu) licensed under CC-BY-NC-4.0 (http://creativecommons.org/licenses/by-nc/4.0/)

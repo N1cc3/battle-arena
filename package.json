@@ -1,14 +1,13 @@
 {
-	"name": "web-game-template",
-	"version": "1.0.0",
-	"description": "Template for making a multiplayer browser game",
+	"name": "battle-arena",
+	"description": "Battle against your friends using both might and magic in an epic gladiator-style arena!",
 	"scripts": {
 		"start": "nodemon ./src/game.ts",
 		"production": "NODE_ENV=production ts-node ./src/game.ts"
 	},
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/N1cc3/web-game-template.git"
+		"url": "git+https://github.com/N1cc3/battle-arena.git"
 	},
 	"license": "MIT",
 	"dependencies": {

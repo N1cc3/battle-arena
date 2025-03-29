@@ -1,9 +1,10 @@
-import { defineConfig } from 'vite'
 import replace from '@rollup/plugin-replace'
 import react from '@vitejs/plugin-react'
+import { defineConfig } from 'vite'
 
 export default defineConfig({
 	plugins: [react()],
+	assetsInclude: ['**/*.gltf'],
 	build: {
 		rollupOptions: {
 			plugins: [

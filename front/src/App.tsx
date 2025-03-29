@@ -1,10 +1,7 @@
 import { KeyboardEventHandler, useEffect, useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import './App.css'
-import { HostedGame } from '../../src/server'
-import { MsgIn, MsgOut } from '../../src/server'
 import { GameMsgIn, GameMsgOut } from '../../src/game'
+import { HostedGame, MsgIn, MsgOut } from '../../src/server'
+import './App.css'
 
 const url = import.meta.env.DEV ? 'ws://localhost:3000/' : `ws://${window.location.host}`
 const ws = new WebSocket(url)
@@ -55,15 +52,7 @@ export const App = () => {
 
 	return (
 		<div className="app">
-			<div>
-				<a href="https://vitejs.dev" target="_blank">
-					<img src={viteLogo} className="logo" alt="Vite logo" />
-				</a>
-				<a href="https://reactjs.org" target="_blank">
-					<img src={reactLogo} className="logo react" alt="React logo" />
-				</a>
-			</div>
-			<h1>Vite + React</h1>
+			<h1>Game Chat</h1>
 			<button onClick={onHost}>Host</button>
 			<br />
 			<input placeholder="game id" onChange={(e) => setId(e.target.value)} value={id} />
@@ -123,7 +112,7 @@ const Lobby = ({
 			)}
 
 			{chat.map((msg) => (
-				<div key={`${msg.name}-${msg.msg}`} style={{ color: msg.private ? 'purple' : 'black' }}>
+				<div key={`${msg.name}-${msg.msg}`} style={{ color: msg.private ? 'purple' : undefined }}>
 					{msg.name}: {msg.msg}
 				</div>
 			))}

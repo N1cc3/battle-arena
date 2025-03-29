@@ -4,12 +4,6 @@ body {
 	width: 100vw;
 }
 
-#game {
-	width: 100%;
-	height: 100%;
-	position: absolute;
-}
-
 #ui {
 	width: 100%;
 	height: 100%;
