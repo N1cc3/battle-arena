@@ -3,7 +3,7 @@ import { GameMsgIn, GameMsgOut } from '../../src/game'
 import { HostedGame, MsgIn, MsgOut } from '../../src/server'
 import './App.css'
 
-const url = import.meta.env.DEV ? 'ws://localhost:3000/' : `ws://${window.location.host}`
+const url = import.meta.env.DEV ? 'ws://localhost:3000/' : `wss://${window.location.host}`
 const ws = new WebSocket(url)
 
 type Chat = { name: string; msg: string; private: boolean }[]
