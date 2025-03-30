@@ -205,24 +205,24 @@
 	"buffers": [
 		{
 			"byteLength": 546912,
-			"uri": "../../forest.bin"
+			"uri": "forest.bin"
 		}
 	],
 	"images": [
 		{
-			"uri": "../../textures/map_1blinn6SG_baseColor.png"
+			"uri": "textures/map_1blinn6SG_baseColor.png"
 		},
 		{
-			"uri": "../../textures/map_1lambert4SG_baseColor.png"
+			"uri": "textures/map_1lambert4SG_baseColor.png"
 		},
 		{
-			"uri": "../../textures/map_1lambert5SG_baseColor.png"
+			"uri": "textures/map_1lambert5SG_baseColor.png"
 		},
 		{
-			"uri": "../../textures/map_1object_baseColor.png"
+			"uri": "textures/map_1object_baseColor.png"
 		},
 		{
-			"uri": "../../textures/map_1object_emissive.png"
+			"uri": "textures/map_1object_emissive.png"
 		}
 	],
 	"materials": [

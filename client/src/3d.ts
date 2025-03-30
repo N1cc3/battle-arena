@@ -1,7 +1,6 @@
 import * as THREE from 'three'
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
-import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
-import forest from './models/forest.gltf'
+import { getGLTF } from './assets'
 
 const scene = new THREE.Scene()
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000)
@@ -18,13 +17,11 @@ controls.update()
 const light = new THREE.AmbientLight(0xffffff, 1)
 scene.add(light)
 
-const gltfLoader = new GLTFLoader()
-gltfLoader.load(forest, (gltf) => {
-	const root = gltf.scene
-	scene.add(root)
-})
-
 const clock = new THREE.Clock()
+
+getGLTF('forest').then((gltf) => {
+	scene.add(gltf.scene)
+})
 
 const animate = () => {
 	const delta = clock.getDelta()
