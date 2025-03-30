@@ -2,6 +2,9 @@
 	"name": "battle-arena",
 	"description": "Battle against your friends using both might and magic in an epic gladiator-style arena!",
 	"packageManager": "pnpm@10.7.0",
+  "engines": {
+    "npm": "22.x"
+  },
 	"scripts": {
 		"prestart": "pnpm --filter=client build",
 		"start": "pnpm --filter=server start"
