@@ -1,9 +1,8 @@
 {
-	"name": "front",
-	"version": "1.0.0",
+	"name": "client",
 	"private": true,
 	"scripts": {
-		"dev": "vite --open --host",
+		"dev": "vite",
 		"build": "vite build"
 	},
 	"dependencies": {

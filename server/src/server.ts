@@ -172,7 +172,7 @@ export const createServer = <GameMsgIn, GameMsgOut>({
 		})
 	})
 
-	app.use(express.static(path.join(__dirname, '../front/dist')))
+	app.use(express.static(path.join(__dirname, '../../client/dist')))
 
 	server.listen(process.env.PORT || 3000, () => {
 		console.log(`Server started on port ${(server.address() as net.AddressInfo)?.port}`)
