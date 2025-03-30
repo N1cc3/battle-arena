@@ -7,4 +7,4 @@
 
 ## Run locally
 
-Run `pnpm dev` in both server and client folders.
+Run `pnpm dev` both in root and client folders.
