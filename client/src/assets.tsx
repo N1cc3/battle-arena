@@ -14,7 +14,7 @@ class GLTFModel<M extends string, A extends string> {
 		return this._animations
 	}
 	async load() {
-		this.gltf = await gltfLoader.loadAsync(`assets/${this.name}/scene.gltf`)
+		this.gltf = await gltfLoader.loadAsync(`/${this.name}/scene.gltf`)
 		this.mixer = new THREE.AnimationMixer(this.gltf.scene)
 	}
 	play(anim: A) {
