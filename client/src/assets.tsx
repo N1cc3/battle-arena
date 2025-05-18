@@ -38,6 +38,14 @@ export const models = {
 		'Walk_Fwd_C',
 		'Sleep',
 	]),
+	character_001: new GLTFModel('character_001', [
+		'Great Sword Death',
+		'Great Sword Idle',
+		'Great Sword Impact',
+		'Great Sword Run',
+		'Great Sword Slash',
+		'Great Sword Walk Back',
+	]),
 } as const
 
 export const getGLTF = (model: keyof typeof models) => gltfLoader.loadAsync(`assets/${model}/scene.gltf`)

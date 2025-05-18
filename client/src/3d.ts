@@ -29,6 +29,7 @@ const animate = () => {
 	const delta = clock.getDelta()
 	controls.update(delta)
 	models.thor.mixer.update(delta)
+	models.character_001.mixer.update(delta)
 	renderer.render(scene, camera)
 }
 
@@ -38,7 +39,11 @@ Promise.all([
 		models.forest.gltf.scene.position.set(0, -5, 0)
 	}),
 	models.thor.load().then(() => {
-		scene.add(models.thor.gltf.scene)
-		models.thor.play('Run_Fwd_C')
+		// scene.add(models.thor.gltf.scene)
+		// models.thor.play('Run_Fwd_C')
+	}),
+	models.character_001.load().then(() => {
+		scene.add(models.character_001.gltf.scene)
+		models.character_001.play('Great Sword Idle')
 	}),
 ]).then(() => renderer.setAnimationLoop(animate))
