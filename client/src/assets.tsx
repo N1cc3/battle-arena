@@ -46,6 +46,7 @@ export const models = {
 		'Great Sword Slash',
 		'Great Sword Walk Back',
 	]),
+	equipment_002: new GLTFModel('equipment_002', []),
 } as const
 
 export const getGLTF = (model: keyof typeof models) => gltfLoader.loadAsync(`assets/${model}/scene.gltf`)

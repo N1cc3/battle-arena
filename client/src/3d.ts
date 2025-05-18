@@ -46,4 +46,8 @@ Promise.all([
 		scene.add(models.character_001.gltf.scene)
 		models.character_001.play('Great Sword Idle')
 	}),
+	models.equipment_002.load().then(() => {
+		scene.add(models.equipment_002.gltf.scene)
+		models.equipment_002.gltf.scene.position.set(1, 1, 1)
+	}),
 ]).then(() => renderer.setAnimationLoop(animate))
