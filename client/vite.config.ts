@@ -6,4 +6,5 @@ export default defineConfig({
 	server: { open: true },
 	publicDir: 'assets',
 	assetsInclude: ['**/*.gltf'],
+	build: { target: 'esnext' },
 })
