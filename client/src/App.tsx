@@ -1,10 +1,9 @@
 import { KeyboardEventHandler, useEffect, useState } from 'react'
-import { GameMsgIn, GameMsgOut } from '../../src/game'
 import { HostedGame, MsgIn, MsgOut } from '../../src/server'
 import './App.css'
 
 const url = import.meta.env.DEV ? 'ws://localhost:3000/' : `wss://${window.location.host}`
-const ws = new WebSocket(url)
+export const ws = new WebSocket(url)
 
 type Chat = { name: string; msg: string; private: boolean }[]
 
@@ -18,7 +17,7 @@ export const App = () => {
 	useEffect(() => {
 		ws.onopen = () => console.log('connected')
 		ws.onclose = () => console.log('disconnected')
-		ws.onmessage = (raw) => {
+		ws.addEventListener('message', (raw) => {
 			const msg = JSON.parse(raw.data) as MsgOut
 			if (msg.type === 'hosted') setGame(msg.game)
 			if (msg.type === 'joined') {
@@ -27,27 +26,14 @@ export const App = () => {
 			}
 			if (msg.type === 'player_disconnected') setGame(msg.game)
 			if (msg.type === 'duplicate_playername') alert('Duplicate player name!')
-
-			const gameMsg = msg as unknown as GameMsgOut
-			if (gameMsg.type === 'chat_msg') {
-				setChat((chat) => [
-					...chat,
-					{
-						name:
-							gameMsg.private && gameMsg.sender === acceptedPlayerName ? `(to: ${gameMsg.recipient})` : gameMsg.sender,
-						msg: gameMsg.msg,
-						private: gameMsg.private,
-					},
-				])
-			}
-		}
+		})
 	}, [playerName, acceptedPlayerName])
 
 	const onHost = () => ws.send(JSON.stringify({ type: 'host' } satisfies MsgIn))
 	const onJoin = () => ws.send(JSON.stringify({ type: 'join', gameId: id, playerName } satisfies MsgIn))
 	const onSubmit = (chatMsg: string, recipient?: string) => {
-		if (recipient) ws.send(JSON.stringify({ type: 'private_msg', recipient, msg: chatMsg } satisfies GameMsgIn))
-		else ws.send(JSON.stringify({ type: 'public_msg', msg: chatMsg } satisfies GameMsgIn))
+		// if (recipient) ws.send(JSON.stringify({ type: 'private_msg', recipient, msg: chatMsg } satisfies GameMsgIn))
+		// else ws.send(JSON.stringify({ type: 'public_msg', msg: chatMsg } satisfies GameMsgIn))
 	}
 
 	return (

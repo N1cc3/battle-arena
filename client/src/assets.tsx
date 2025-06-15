@@ -1,11 +1,11 @@
 import * as THREE from 'three'
 import { GLTF, GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
+import * as SkeletonUtils from 'three/addons/utils/SkeletonUtils.js'
 
 const gltfLoader = new GLTFLoader()
 
 class GLTFModel<M extends string, A extends string> {
 	gltf!: GLTF
-	mixer!: THREE.AnimationMixer
 	constructor(private _name: M, private _animations: A[]) {}
 	get name() {
 		return this._name
@@ -15,12 +15,22 @@ class GLTFModel<M extends string, A extends string> {
 	}
 	async load() {
 		this.gltf = await gltfLoader.loadAsync(`/${this.name}/scene.gltf`)
-		this.mixer = new THREE.AnimationMixer(this.gltf.scene)
 	}
+}
+
+export class Model<M extends string, A extends string> extends THREE.Object3D {
+	mixer: THREE.AnimationMixer
+
+	constructor(private model: GLTFModel<M, A>) {
+		super()
+		this.add(SkeletonUtils.clone(model.gltf.scene))
+		this.mixer = new THREE.AnimationMixer(this)
+	}
+
 	play(anim: A) {
-		const clip = THREE.AnimationClip.findByName(this.gltf.animations, anim)
-		if (!clip) throw new Error(`Animation ${anim} not found on model ${this.name}`)
-		return this.mixer.clipAction(clip).play()
+		const clip = THREE.AnimationClip.findByName(this.model.gltf.animations, anim)
+		if (!clip) throw new Error(`Animation ${anim} not found on model ${this.model}`)
+		return this.mixer.clipAction(clip, this).play()
 	}
 }
 
@@ -48,8 +58,6 @@ export const models = {
 	]),
 	equipment_002: new GLTFModel('equipment_002', []),
 } as const
-
-export const getGLTF = (model: keyof typeof models) => gltfLoader.loadAsync(`assets/${model}/scene.gltf`)
 
 export const dumpObject = (obj: OBJ, lines: string[] = [], isLast = true, prefix = '') => {
 	const localPrefix = isLast ? '└─' : '├─'

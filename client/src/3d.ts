@@ -1,6 +1,8 @@
 import * as THREE from 'three'
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
-import { models } from './assets'
+import { GameMsgOut } from '../../src/game'
+import { ws } from './App'
+import { Model, models } from './assets'
 
 const scene = new THREE.Scene()
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000)
@@ -25,29 +27,43 @@ scene.add(light)
 
 const clock = new THREE.Clock()
 
-const animate = () => {
+await Promise.all(Object.values(models).map((m) => m.load()))
+
+const terrain = new Model(models.forest)
+scene.add(terrain)
+terrain.position.set(0, -5, 0)
+
+renderer.setAnimationLoop(() => {
 	const delta = clock.getDelta()
 	controls.update(delta)
-	models.thor.mixer.update(delta)
-	models.character_001.mixer.update(delta)
+	characterModels.forEach((model) => model.mixer.update(delta))
 	renderer.render(scene, camera)
-}
+})
 
-Promise.all([
-	models.forest.load().then(() => {
-		scene.add(models.forest.gltf.scene)
-		models.forest.gltf.scene.position.set(0, -5, 0)
-	}),
-	models.thor.load().then(() => {
-		// scene.add(models.thor.gltf.scene)
-		// models.thor.play('Run_Fwd_C')
-	}),
-	models.character_001.load().then(() => {
-		scene.add(models.character_001.gltf.scene)
-		models.character_001.play('Great Sword Idle')
-	}),
-	models.equipment_002.load().then(() => {
-		scene.add(models.equipment_002.gltf.scene)
-		models.equipment_002.gltf.scene.position.set(1, 1, 1)
-	}),
-]).then(() => renderer.setAnimationLoop(animate))
+const characterModels: Model<string, string>[] = []
+
+ws.addEventListener('message', (raw) => {
+	const msg = JSON.parse(raw.data) as GameMsgOut
+
+	if (msg.type === 'game_state') {
+		msg.state.characters.forEach((c) => {
+			let model = characterModels.find((cm) => cm.name === c.name)
+			if (!model) {
+				model = new Model(models.character_001)
+				model.name = c.name
+				characterModels.push(model)
+				scene.add(model)
+				model.position.set(characterModels.length - 1, 0, 0) // Position them in a line
+			}
+			model.play(
+				c.animation as
+					| 'Great Sword Death'
+					| 'Great Sword Idle'
+					| 'Great Sword Impact'
+					| 'Great Sword Run'
+					| 'Great Sword Slash'
+					| 'Great Sword Walk Back'
+			)
+		})
+	}
+})
