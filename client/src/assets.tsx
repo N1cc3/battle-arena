@@ -36,6 +36,8 @@ export class Model<M extends string, A extends string> extends THREE.Object3D {
 
 export const models = {
 	forest: new GLTFModel('forest', []),
+	mountain: new GLTFModel('mountain', []),
+	skybox: new GLTFModel('skybox', []),
 	thor: new GLTFModel('thor', [
 		'Like_Personality',
 		'Idle_C',

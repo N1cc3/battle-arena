@@ -29,9 +29,24 @@ const clock = new THREE.Clock()
 
 await Promise.all(Object.values(models).map((m) => m.load()))
 
-const terrain = new Model(models.forest)
+const terrain = new THREE.Object3D()
 scene.add(terrain)
-terrain.position.set(0, -5, 0)
+const terrain1 = new Model(models.mountain)
+terrain.add(terrain1)
+const terrain2 = new Model(models.mountain)
+terrain2.scale.set(-1, 1, 1)
+terrain.add(terrain2)
+const terrain3 = new Model(models.mountain)
+terrain3.scale.set(-1, 1, -1)
+terrain.add(terrain3)
+const terrain4 = new Model(models.mountain)
+terrain4.scale.set(1, 1, -1)
+terrain.add(terrain4)
+terrain.position.set(0, -40, 0)
+
+const skybox = new Model(models.skybox)
+skybox.scale.set(20, 20, 20)
+scene.add(skybox)
 
 renderer.setAnimationLoop(() => {
 	const delta = clock.getDelta()
