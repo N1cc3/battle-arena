@@ -19,8 +19,15 @@ window.addEventListener('resize', () => {
 
 const controls = new OrbitControls(camera, renderer.domElement)
 camera.position.set(0, 5, 10)
-controls.autoRotate = true
+// controls.autoRotate = true
 controls.update()
+
+window.addEventListener('mousemove', (e) => {
+	const x = (e.clientX / window.innerWidth) * 2 - 1
+	const y = -(e.clientY / window.innerHeight) * 2 + 1
+	controls.target.set(-x * 10, 0, y * 10)
+	controls.update()
+})
 
 const light = new THREE.AmbientLight(0xffffff, 1)
 scene.add(light)
@@ -48,14 +55,31 @@ const skybox = new Model(models.skybox)
 skybox.scale.set(20, 20, 20)
 scene.add(skybox)
 
+const characterModels: Model<string, string>[] = []
+
+const sword = models.character_001.gltf.scene.children.filter((c) => c.name === 'Armature001')
+models.character_001.gltf.scene.remove(...sword)
+const char = new Model(models.character_001)
+
+char.scale.set(5, 5, 5)
+characterModels.push(char)
+scene.add(char)
+char.play('Great Sword Idle')
+
+const greenMaterial = new THREE.MeshBasicMaterial({ color: 0x00ff00 })
+
+const hat = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.2, 0.2).translate(0, 0.5, 0), greenMaterial)
+scene.getObjectByName('mixamorigHead')?.add(hat)
+
+const weapon = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.05, 0.05).translate(0.2, 0.05, 0), greenMaterial)
+scene.getObjectByName('mixamorigRightHand')?.add(weapon)
+
 renderer.setAnimationLoop(() => {
 	const delta = clock.getDelta()
 	controls.update(delta)
 	characterModels.forEach((model) => model.mixer.update(delta))
 	renderer.render(scene, camera)
 })
-
-const characterModels: Model<string, string>[] = []
 
 ws.addEventListener('message', (raw) => {
 	const msg = JSON.parse(raw.data) as GameMsgOut
