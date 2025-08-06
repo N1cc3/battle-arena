@@ -35,21 +35,8 @@ export class Model<M extends string, A extends string> extends THREE.Object3D {
 }
 
 export const models = {
-	forest: new GLTFModel('forest', []),
 	mountain: new GLTFModel('mountain', []),
 	skybox: new GLTFModel('skybox', []),
-	thor: new GLTFModel('thor', [
-		'Like_Personality',
-		'Idle_C',
-		'Like_Idle',
-		'Emote_10398002020',
-		'Emote_10395002030',
-		'Emote_10390012010',
-		'103961_ThunderRelease_Loop',
-		'Run_Fwd_C',
-		'Walk_Fwd_C',
-		'Sleep',
-	]),
 	character_001: new GLTFModel('character_001', [
 		'Great Sword Death',
 		'Great Sword Idle',
@@ -58,6 +45,7 @@ export const models = {
 		'Great Sword Slash',
 		'Great Sword Walk Back',
 	]),
+	equipment_001: new GLTFModel('equipment_001', []),
 	equipment_002: new GLTFModel('equipment_002', []),
 } as const
 
