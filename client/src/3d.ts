@@ -55,41 +55,40 @@ const skybox = new Model(models.skybox)
 skybox.scale.set(20, 20, 20)
 scene.add(skybox)
 
-const characterModels: Model<string, string>[] = []
+const animatedModels: Model<string, string>[] = []
 
-console.log(dumpObject(models.character_004.gltf.scene))
+console.log(dumpObject(models.equipment_005.gltf.scene))
 
-// const sword = models.character_004.gltf.scene.children.filter((c) => c.name === 'SM_Sword_002')
-// models.character_004.gltf.scene.remove(...sword)
+const armature = models.equipment_005.gltf.scene.children.filter((c) => c.name === 'Armature')[0]
+const getEquipment = (set: 'BlueSet' | 'GreenSet', piece: 'Arms' | 'Boots' | 'Chest' | 'Head' | 'Pants') =>
+	armature.children.filter((c) => c.name === `${set}_${piece}`)[0]
 
-// const armature = models.character_004.gltf.scene.children.filter((c) => c.name === 'Armature')[0]
-// const arms = armature.children.filter((c) => c.name === 'Arms')
-// armature.remove(...arms)
-// const head = armature.children.filter((c) => c.name === 'Head')
-// armature.remove(...head)
+getEquipment('BlueSet', 'Arms').visible = false
+// getEquipment('BlueSet', 'Boots').visible = false
+getEquipment('BlueSet', 'Chest').visible = false
+getEquipment('BlueSet', 'Head').visible = false
+getEquipment('BlueSet', 'Pants').visible = false
+getEquipment('GreenSet', 'Arms').visible = false
+getEquipment('GreenSet', 'Boots').visible = false
+getEquipment('GreenSet', 'Chest').visible = false
+// getEquipment('GreenSet', 'Head').visible = false
+getEquipment('GreenSet', 'Pants').visible = false
 
-const char = new Model(models.character_004)
-const equip = new Model(models.equipment_004)
+const char = new Model(models.character_005)
+const equip = new Model(models.equipment_005)
 char.add(equip)
+animatedModels.push(equip)
 
 char.scale.set(5, 5, 5)
-characterModels.push(char)
+animatedModels.push(char)
 scene.add(char)
 char.play('Great Sword Idle')
 equip.play('Great Sword Idle')
 
-// const greenMaterial = new THREE.MeshBasicMaterial({ color: 0x00ff00 })
-
-// const hat = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.2, 0.2).translate(0, 0.5, 0), greenMaterial)
-// scene.getObjectByName('mixamorigHead')?.add(hat)
-
-// const weapon = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.05, 0.05).translate(0.2, 0.05, 0), greenMaterial)
-// scene.getObjectByName('mixamorigRightHand')?.add(weapon)
-
 renderer.setAnimationLoop(() => {
 	const delta = clock.getDelta()
 	controls.update(delta)
-	characterModels.forEach((model) => model.mixer.update(delta))
+	animatedModels.forEach((model) => model.mixer.update(delta))
 	renderer.render(scene, camera)
 })
 
@@ -98,13 +97,13 @@ ws.addEventListener('message', (raw) => {
 
 	if (msg.type === 'game_state') {
 		msg.state.characters.forEach((c) => {
-			let model = characterModels.find((cm) => cm.name === c.name)
+			let model = animatedModels.find((cm) => cm.name === c.name)
 			if (!model) {
 				model = new Model(models.character_001)
 				model.name = c.name
-				characterModels.push(model)
+				animatedModels.push(model)
 				scene.add(model)
-				model.position.set(characterModels.length - 1, 0, 0) // Position them in a line
+				model.position.set(animatedModels.length - 1, 0, 0) // Position them in a line
 			}
 			model.play(
 				c.animation as
