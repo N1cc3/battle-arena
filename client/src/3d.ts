@@ -57,23 +57,26 @@ scene.add(skybox)
 
 const characterModels: Model<string, string>[] = []
 
-console.log(dumpObject(models.character_003.gltf.scene))
+console.log(dumpObject(models.character_004.gltf.scene))
 
-const sword = models.character_003.gltf.scene.children.filter((c) => c.name === 'SM_Sword_002')
-models.character_003.gltf.scene.remove(...sword)
+// const sword = models.character_004.gltf.scene.children.filter((c) => c.name === 'SM_Sword_002')
+// models.character_004.gltf.scene.remove(...sword)
 
-const armature = models.character_003.gltf.scene.children.filter((c) => c.name === 'Armature')[0]
-const arms = armature.children.filter((c) => c.name === 'Arms')
-armature.remove(...arms)
-const head = armature.children.filter((c) => c.name === 'Head')
-armature.remove(...head)
+// const armature = models.character_004.gltf.scene.children.filter((c) => c.name === 'Armature')[0]
+// const arms = armature.children.filter((c) => c.name === 'Arms')
+// armature.remove(...arms)
+// const head = armature.children.filter((c) => c.name === 'Head')
+// armature.remove(...head)
 
-const char = new Model(models.character_003)
+const char = new Model(models.character_004)
+const equip = new Model(models.equipment_004)
+char.add(equip)
 
 char.scale.set(5, 5, 5)
 characterModels.push(char)
 scene.add(char)
 char.play('Great Sword Idle')
+equip.play('Great Sword Idle')
 
 // const greenMaterial = new THREE.MeshBasicMaterial({ color: 0x00ff00 })
 
