@@ -2,7 +2,7 @@ import * as THREE from 'three'
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 import { GameMsgOut } from '../../src/game'
 import { ws } from './App'
-import { Model, models } from './assets'
+import { dumpObject, Model, models } from './assets'
 
 const scene = new THREE.Scene()
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000)
@@ -57,9 +57,15 @@ scene.add(skybox)
 
 const characterModels: Model<string, string>[] = []
 
-const sword = models.character_001.gltf.scene.children.filter((c) => c.name === 'Armature001')
-models.character_001.gltf.scene.remove(...sword)
-const char = new Model(models.character_001)
+console.log(dumpObject(models.character_002.gltf.scene))
+
+const sword = models.character_002.gltf.scene.children.filter((c) => c.name === 'SM_Sword_002')
+models.character_002.gltf.scene.remove(...sword)
+
+const head = models.character_002.gltf.scene.children.filter((c) => c.name === 'SM_Body_Male_Equipment')
+models.character_002.gltf.scene.remove(...head)
+
+const char = new Model(models.character_002)
 
 char.scale.set(5, 5, 5)
 characterModels.push(char)

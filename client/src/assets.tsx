@@ -58,7 +58,14 @@ export const models = {
 		'Great Sword Slash',
 		'Great Sword Walk Back',
 	]),
-	equipment_002: new GLTFModel('equipment_002', []),
+	character_002: new GLTFModel('character_002', [
+		'Great Sword Death',
+		'Great Sword Idle',
+		'Great Sword Impact',
+		'Great Sword Run',
+		'Great Sword Slash',
+		'Great Sword Walk Back',
+	]),
 } as const
 
 export const dumpObject = (obj: OBJ, lines: string[] = [], isLast = true, prefix = '') => {
