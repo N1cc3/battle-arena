@@ -57,28 +57,31 @@ scene.add(skybox)
 
 const characterModels: Model<string, string>[] = []
 
-console.log(dumpObject(models.character_002.gltf.scene))
+console.log(dumpObject(models.character_003.gltf.scene))
 
-const sword = models.character_002.gltf.scene.children.filter((c) => c.name === 'SM_Sword_002')
-models.character_002.gltf.scene.remove(...sword)
+const sword = models.character_003.gltf.scene.children.filter((c) => c.name === 'SM_Sword_002')
+models.character_003.gltf.scene.remove(...sword)
 
-const head = models.character_002.gltf.scene.children.filter((c) => c.name === 'SM_Body_Male_Equipment')
-models.character_002.gltf.scene.remove(...head)
+const armature = models.character_003.gltf.scene.children.filter((c) => c.name === 'Armature')[0]
+const arms = armature.children.filter((c) => c.name === 'Arms')
+armature.remove(...arms)
+const head = armature.children.filter((c) => c.name === 'Head')
+armature.remove(...head)
 
-const char = new Model(models.character_002)
+const char = new Model(models.character_003)
 
 char.scale.set(5, 5, 5)
 characterModels.push(char)
 scene.add(char)
 char.play('Great Sword Idle')
 
-const greenMaterial = new THREE.MeshBasicMaterial({ color: 0x00ff00 })
+// const greenMaterial = new THREE.MeshBasicMaterial({ color: 0x00ff00 })
 
-const hat = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.2, 0.2).translate(0, 0.5, 0), greenMaterial)
-scene.getObjectByName('mixamorigHead')?.add(hat)
+// const hat = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.2, 0.2).translate(0, 0.5, 0), greenMaterial)
+// scene.getObjectByName('mixamorigHead')?.add(hat)
 
-const weapon = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.05, 0.05).translate(0.2, 0.05, 0), greenMaterial)
-scene.getObjectByName('mixamorigRightHand')?.add(weapon)
+// const weapon = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.05, 0.05).translate(0.2, 0.05, 0), greenMaterial)
+// scene.getObjectByName('mixamorigRightHand')?.add(weapon)
 
 renderer.setAnimationLoop(() => {
 	const delta = clock.getDelta()
