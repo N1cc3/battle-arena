@@ -1,6 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import './3d'
+// import './3d'
+import './game.ts'
 import { App } from './App'
 import './index.css'
 

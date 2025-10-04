@@ -18,95 +18,55 @@ class GLTFModel<M extends string, A extends string> {
 	}
 }
 
-export class Model<M extends string, A extends string> extends THREE.Object3D {
-	mixer: THREE.AnimationMixer
+export type AnyModel = Model<keyof typeof models>
+export type AnimationsOf<M extends keyof typeof models> = (typeof models)[M]['animations'][number]
 
-	constructor(private model: GLTFModel<M, A>) {
+export class Model<M extends keyof typeof models> extends THREE.Object3D {
+	mixer: THREE.AnimationMixer
+	model: GLTFModel<M, AnimationsOf<M>>
+
+	constructor(modelName: M) {
 		super()
-		this.add(SkeletonUtils.clone(model.gltf.scene))
+		this.model = models[modelName] as GLTFModel<M, AnimationsOf<M>>
+		this.model.gltf.scene.traverse((obj) => (obj.castShadow = true))
+		this.add(SkeletonUtils.clone(this.model.gltf.scene))
 		this.mixer = new THREE.AnimationMixer(this)
 	}
 
-	play(anim: A) {
+	play(anim: AnimationsOf<M>) {
 		const clip = THREE.AnimationClip.findByName(this.model.gltf.animations, anim)
 		if (!clip) throw new Error(`Animation ${anim} not found on model ${this.model}`)
 		return this.mixer.clipAction(clip, this).play()
 	}
+
+	anim(anim: AnimationsOf<M>) {
+		const clip = THREE.AnimationClip.findByName(this.model.gltf.animations, anim)
+		if (!clip) throw new Error(`Animation ${anim} not found on model ${this.model}`)
+		return clip
+	}
 }
 
 export const models = {
-	forest: new GLTFModel('forest', []),
-	mountain: new GLTFModel('mountain', []),
-	skybox: new GLTFModel('skybox', []),
-	thor: new GLTFModel('thor', [
-		'Like_Personality',
-		'Idle_C',
-		'Like_Idle',
-		'Emote_10398002020',
-		'Emote_10395002030',
-		'Emote_10390012010',
-		'103961_ThunderRelease_Loop',
-		'Run_Fwd_C',
-		'Walk_Fwd_C',
-		'Sleep',
-	]),
-	character_001: new GLTFModel('character_001', [
-		'Great Sword Death',
-		'Great Sword Idle',
-		'Great Sword Impact',
-		'Great Sword Run',
-		'Great Sword Slash',
-		'Great Sword Walk Back',
-	]),
-	character_002: new GLTFModel('character_002', [
-		'Great Sword Death',
-		'Great Sword Idle',
-		'Great Sword Impact',
-		'Great Sword Run',
-		'Great Sword Slash',
-		'Great Sword Walk Back',
-	]),
-	character_003: new GLTFModel('character_003', [
-		'Great Sword Death',
-		'Great Sword Idle',
-		'Great Sword Impact',
-		'Great Sword Run',
-		'Great Sword Slash',
-		'Great Sword Walk Back',
-	]),
-	character_004: new GLTFModel('character_004', [
-		'Great Sword Death',
-		'Great Sword Idle',
-		'Great Sword Impact',
-		'Great Sword Run',
-		'Great Sword Slash',
-		'Great Sword Walk Back',
-	]),
-	equipment_004: new GLTFModel('equipment_004', [
-		'Great Sword Death',
-		'Great Sword Idle',
-		'Great Sword Impact',
-		'Great Sword Run',
-		'Great Sword Slash',
-		'Great Sword Walk Back',
-	]),
+	skybox: new GLTFModel('skybox', ['asd']),
 	character_005: new GLTFModel('character_005', [
-		'Great Sword Death',
 		'Great Sword Idle',
 		'Great Sword Impact',
-		'Great Sword Run',
+		'Great Sword Run Forward',
 		'Great Sword Slash',
-		'Great Sword Walk Back',
+		'Great Sword Walk Backwards',
+		'Great Sword Death',
 	]),
 	equipment_005: new GLTFModel('equipment_005', [
-		'Great Sword Death',
 		'Great Sword Idle',
 		'Great Sword Impact',
-		'Great Sword Run',
+		'Great Sword Run Forward',
 		'Great Sword Slash',
-		'Great Sword Walk Back',
+		'Great Sword Walk Backwards',
+		'Great Sword Death',
 	]),
 } as const
+
+await Promise.all(Object.values(models).map((m) => m.load()))
 
 export const dumpObject = (obj: OBJ, lines: string[] = [], isLast = true, prefix = '') => {
 	const localPrefix = isLast ? '└─' : '├─'
