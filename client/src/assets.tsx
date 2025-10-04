@@ -6,7 +6,7 @@ const gltfLoader = new GLTFLoader()
 
 class GLTFModel<M extends string, A extends string> {
 	gltf!: GLTF
-	constructor(private _name: M, private _animations: A[]) {}
+	constructor(private _name: M, private _animations: { name: A; loop?: true; stopWhenFinished?: true }[]) {}
 	get name() {
 		return this._name
 	}
@@ -18,12 +18,12 @@ class GLTFModel<M extends string, A extends string> {
 	}
 }
 
-export type AnyModel = Model<keyof typeof models>
-export type AnimationsOf<M extends keyof typeof models> = (typeof models)[M]['animations'][number]
+export type AnimationsOf<M extends keyof typeof models> = (typeof models)[M]['animations'][number]['name']
 
 export class Model<M extends keyof typeof models> extends THREE.Object3D {
 	mixer: THREE.AnimationMixer
 	model: GLTFModel<M, AnimationsOf<M>>
+	private action?: THREE.AnimationAction
 
 	constructor(modelName: M) {
 		super()
@@ -31,38 +31,46 @@ export class Model<M extends keyof typeof models> extends THREE.Object3D {
 		this.model.gltf.scene.traverse((obj) => (obj.castShadow = true))
 		this.add(SkeletonUtils.clone(this.model.gltf.scene))
 		this.mixer = new THREE.AnimationMixer(this)
+
+		const defaultAnim = this.model.animations[0]
+		if (!defaultAnim) return
+		this.mixer.addEventListener('finished', (e) => {
+			const { name } = e.action.getClip()
+			const anim = this.model.animations.find((a) => a.name === name)
+			if (anim && !anim.loop && !anim.stopWhenFinished) this.play(defaultAnim.name)
+		})
 	}
 
-	play(anim: AnimationsOf<M>) {
-		const clip = THREE.AnimationClip.findByName(this.model.gltf.animations, anim)
-		if (!clip) throw new Error(`Animation ${anim} not found on model ${this.model}`)
-		return this.mixer.clipAction(clip, this).play()
-	}
-
-	anim(anim: AnimationsOf<M>) {
-		const clip = THREE.AnimationClip.findByName(this.model.gltf.animations, anim)
-		if (!clip) throw new Error(`Animation ${anim} not found on model ${this.model}`)
-		return clip
+	play(name: AnimationsOf<M>, fadeSpeed = 1) {
+		const anim = this.model.animations.find((a) => a.name === name)
+		const clip = THREE.AnimationClip.findByName(this.model.gltf.animations, name)
+		if (!clip || !anim) throw new Error(`Animation ${name} not found on model ${this.model}`)
+		const newAction = this.mixer.clipAction(clip)
+		if (this.action === newAction) return
+		this.action = this.action ? this.action.crossFadeTo(newAction.reset(), fadeSpeed) : newAction
+		this.action.setLoop(anim.loop ? THREE.LoopRepeat : THREE.LoopOnce, Infinity)
+		this.action.clampWhenFinished = true
+		this.action.play()
 	}
 }
 
 export const models = {
-	skybox: new GLTFModel('skybox', ['asd']),
+	skybox: new GLTFModel('skybox', []),
 	character_005: new GLTFModel('character_005', [
-		'Great Sword Idle',
-		'Great Sword Impact',
-		'Great Sword Run Forward',
-		'Great Sword Slash',
-		'Great Sword Walk Backwards',
-		'Great Sword Death',
+		{ name: 'Great Sword Idle', loop: true },
+		{ name: 'Great Sword Run Forward', loop: true },
+		{ name: 'Great Sword Walk Backwards', loop: true },
+		{ name: 'Great Sword Impact' },
+		{ name: 'Great Sword Slash' },
+		{ name: 'Great Sword Death', stopWhenFinished: true },
 	]),
 	equipment_005: new GLTFModel('equipment_005', [
-		'Great Sword Idle',
-		'Great Sword Impact',
-		'Great Sword Run Forward',
-		'Great Sword Slash',
-		'Great Sword Walk Backwards',
-		'Great Sword Death',
+		{ name: 'Great Sword Idle', loop: true },
+		{ name: 'Great Sword Run Forward', loop: true },
+		{ name: 'Great Sword Walk Backwards', loop: true },
+		{ name: 'Great Sword Impact' },
+		{ name: 'Great Sword Slash' },
+		{ name: 'Great Sword Death', stopWhenFinished: true },
 	]),
 } as const
 
